@@ -1,4 +1,5 @@
 import nmap
+import os
 from colorama import Fore
 from terminaltables import SingleTable
 from ping3 import ping
@@ -134,3 +135,7 @@ class Scanner:
         if(live_hosts is not False):
             scan_results = self.perform_scan()
             self.generate_table(scan_results)
+        else:
+            print("Host is either dead or blocking ICMP packets.")
+            input("Press enter to continue...")
+            os.system('cls')

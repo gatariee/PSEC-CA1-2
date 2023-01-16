@@ -11,7 +11,7 @@ while 1:
     match choice:
         case '1':
             os.system('cls')
-            hosts = "localhost"
+            hosts = "a"
             options = "-sU -sT --top-ports 10"
             ps = Scanner(targets = hosts, options = options)
             ps.run()
