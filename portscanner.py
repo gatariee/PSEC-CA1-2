@@ -132,7 +132,7 @@ class Scanner:
         """
         print("Checking status of hosts...")
         live_hosts = self.is_alive()
-        if(live_hosts is not False):
+        if(live_hosts is True):
             scan_results = self.perform_scan()
             self.generate_table(scan_results)
         else:

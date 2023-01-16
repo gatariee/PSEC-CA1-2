@@ -20,7 +20,7 @@ class FTPHandler:
                 self.ftp.quit()
                 break
             elif command == '?':
-                print("Commands: ls, get, put, clear, exit")
+                print("Commands: ls, get, put, clear")
             elif command == 'ls':
                 self.ftp.dir()
             elif command[:3] == 'get':

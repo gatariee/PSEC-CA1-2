@@ -1,23 +1,43 @@
 import os
+import socket
+from termcolor import colored
+from terminaltables import SingleTable
 from portscanner import Scanner
 from client import FTPHandler
+clear = lambda: os.system('cls')
+data = [
+    ["1", "Port Scanner"], 
+    ["2", "FTP Client"], 
+    ["3", "Custom Packet"], 
+    ["4", "Exit"]
+]
+options_table: SingleTable = SingleTable(data)
+options_table.inner_row_border = 1
 while 1:
-    print("*** PSEC Info Security Apps ***")
-    print("1. Nmap Scanner")
-    print("2. Upload/Download File using FTP")
-    print("3. Send Custom Packet")
-    print("4. Quit")
-    choice = input(">> ")
+    print(colored(
+        rf"""
+    ██████╗ ███████╗███████╗ ██████╗
+    ██╔══██╗██╔════╝██╔════╝██╔════╝
+    ██████╔╝███████╗█████╗  ██║     
+    ██╔═══╝ ╚════██║██╔══╝  ██║     
+    ██║     ███████║███████╗╚██████╗
+    ╚═╝     ╚══════╝╚══════╝ ╚═════╝     
+    {colored("Author: ", 'red', attrs=['bold'])} {colored("Zavier Lee", 'blue', attrs=['bold'])}   
+    {colored("Class: ", 'red', attrs=['bold'])} {colored("DISM/FT/1B/05", 'blue', attrs=['bold'])}   
+    {colored("Module Code: ", 'red', attrs=['bold'])} {colored("ST2414", 'blue', attrs=['bold'])}
+    """, 'green').center(250))
+    print(options_table.table)
+    choice = input("\t>> ")
     match choice:
         case '1':
-            os.system('cls')
-            hosts = "a"
+            clear()
+            hosts = "localhost"
             options = "-sU -sT --top-ports 10"
             ps = Scanner(targets = hosts, options = options)
             ps.run()
         case '2':
-            os.system('cls')
-            IP = '192.168.169.134'
+            clear()
+            IP = socket.gethostbyname(socket.gethostname())
             PORT = 2121
             conn = FTPHandler(IP, PORT)
             conn.run()
@@ -27,6 +47,7 @@ while 1:
             exit()
         case _:
             print("Invalid choice. Try again.")
+    input("Press enter to continue...")
 
 # hosts = "localhost scanme.nmap.org"
 # options = "-sU -sT --top-ports 10 -sV -sC --traceroute -O"
