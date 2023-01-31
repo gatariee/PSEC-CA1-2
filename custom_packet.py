@@ -9,9 +9,9 @@ class PacketHandler:
         self.source_ip_valid = False
         self.destination_ip = ""
         self.destination_ip_valid = False
-        self.source_port = 0
+        self.source_port = ""
         self.source_port_valid = False
-        self.destination_port = 0
+        self.destination_port = ""
         self.destination_port_valid = False
         self.protocol = ""
         self.protocol_valid = False
@@ -70,31 +70,31 @@ class PacketHandler:
     def send_input(self, option: int):
         match option:
             case 1:
-                self.source_ip = input("Enter the source IP: ")
+                self.source_ip = input("Enter the source IP (x.x.x.x):")
                 if(self.validate_input(None, 2, 1) == True):
                     self.source_ip_valid = True
                 else:
                     self.source_ip_valid = False
             case 2: 
-                self.destination_ip = input("Enter the destination IP: ")
+                self.destination_ip = input("Enter the destination IP (x.x.x.x):")
                 if(self.validate_input(None, 2, 2) == True):
                     self.destination_ip_valid = True
                 else:
                     self.destination_ip_valid = False
             case 3:
-                self.source_port = input("Enter the source port: ")
+                self.source_port = input("Enter the source port (0-65535): ")
                 if(self.validate_input(None, 2, 3) == True):
                     self.source_port_valid = True
                 else:
                     self.source_port_valid = False
             case 4:
-                self.destination_port = input("Enter the destination port: ")
+                self.destination_port = input("Enter the destination port (0-65535): ")
                 if(self.validate_input(None, 2, 4) == True):
                     self.destination_port_valid = True
                 else:
                     self.destination_port_valid = False
             case 5: 
-                self.protocol = input("Enter the protocol: ")
+                self.protocol = input("Enter the protocol(TCP, IP, ICMP): ")
                 if(self.validate_input(None, 2, 5) == True):
                     self.protocol_valid = True
                 else:
@@ -184,7 +184,17 @@ class PacketHandler:
                         print("Invalid packet count. Try again.")
                         input("Press enter to continue...")
                 else:
-                    print("One or more fields are invalid.")
+                    print("Please fill in the following fields: ")
+                    if self.source_ip_valid == False:
+                        print("- Source IP")
+                    if self.destination_ip_valid == False:
+                        print("- Destination IP")
+                    if self.source_port_valid == False:
+                        print("- Source Port")
+                    if self.destination_port_valid == False:
+                        print("- Destination Port")
+                    if self.protocol_valid == False:
+                        print("- Protocol")
                     input("Press enter to continue...")
             else:
                 if self.validate_input(option, 1, None):

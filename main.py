@@ -5,11 +5,12 @@ from terminaltables import SingleTable
 from portscanner import Scanner
 from client import FTPHandler
 from custom_packet import PacketHandler
-def clear(): 
+def clear_screen(): 
     os.system('cls' if os.name == 'nt' else 'clear')
 
 def buffer():
     input("Press enter to continue...")
+
 def main_menu():       
     data = [
         ["1", "Port Scanner"], 
@@ -35,12 +36,12 @@ def main_menu():
 
 
 while 1:
-    clear()
+    clear_screen()
     main_menu()
     choice = input(">> ")
     match choice:
         case '1':
-            clear()
+            clear_screen()
             # hosts = "localhost scanme.nmap.org"
             # options = "-sU -sT --top-ports 10 -sV -sC --traceroute -O"
             hosts = "scanme.nmap.org"
@@ -49,15 +50,16 @@ while 1:
             nmap_scan.run()
             buffer()
         case '2':
-            clear()
+            clear_screen()
             IP = socket.gethostbyname(socket.gethostname())
             PORT = 2121
             ftp_client = FTPHandler(IP, PORT)
             ftp_client.run()
         case '3':
-            clear()
-            custom_packet = PacketHandler()
-            custom_packet.run()
+            clear_screen()
+            packet_handler = PacketHandler()
+            packet_handler.run()
+            buffer()
         case '4':
             exit()
         case _:
