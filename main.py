@@ -33,9 +33,9 @@ while 1:
         case '1':
             clear()
             # hosts = "localhost scanme.nmap.org"
-            # options = "-sU -sT --top-ports 10 -sV -sC --traceroute -O"
-            hosts = "localhost"
-            options = "-sU -sT --top-ports 10"
+            options = "-sU -sT --top-ports 10 -sV -sC --traceroute -O"
+            hosts = "scanme.nmap.org"
+            # options = "-sU -sT --top-ports 10"
             ps = Scanner(targets = hosts, options = options)
             ps.run()
         case '2':

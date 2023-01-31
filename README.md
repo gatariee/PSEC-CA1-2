@@ -1,8 +1,8 @@
 # PSEC CA1-2 (Security Application)
 
 ## Requirements
-- Python 3.9+
-- Nmap 7.93+
+- [Python 3.9+](https://www.python.org/downloads/)
+- [Nmap 7.93+](https://nmap.org/download.html)
 ## Installation
 
 ```bash
@@ -19,6 +19,11 @@ cd PSEC-CA1-2
 ```bash
 cd PSEC-CA1-2
 ./start.sh
+source env/bin/activate 
+# or
+source env/Scripts/activate
+python server.py
+python main.py
 ```
 
 ### Windows (Manual Setup)
