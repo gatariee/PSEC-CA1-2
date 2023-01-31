@@ -4,6 +4,7 @@ from termcolor import colored
 from terminaltables import SingleTable
 from portscanner import Scanner
 from client import FTPHandler
+from custom_packet import PacketHandler
 clear = lambda: os.system('cls')
 data = [
     ["1", "Port Scanner"], 
@@ -31,6 +32,8 @@ while 1:
     match choice:
         case '1':
             clear()
+            # hosts = "localhost scanme.nmap.org"
+            # options = "-sU -sT --top-ports 10 -sV -sC --traceroute -O"
             hosts = "localhost"
             options = "-sU -sT --top-ports 10"
             ps = Scanner(targets = hosts, options = options)
@@ -42,12 +45,11 @@ while 1:
             conn = FTPHandler(IP, PORT)
             conn.run()
         case '3':
-            print("custom")
+            clear()
+            ph = PacketHandler()
+            ph.run()
         case '4':
             exit()
         case _:
             print("Invalid choice. Try again.")
     input("Press enter to continue...")
-
-# hosts = "localhost scanme.nmap.org"
-# options = "-sU -sT --top-ports 10 -sV -sC --traceroute -O"

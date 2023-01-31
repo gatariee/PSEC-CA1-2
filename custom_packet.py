@@ -1,23 +1,60 @@
 from scapy.all import send, IP, TCP, ICMP, UDP
 from terminaltables import SingleTable
+from termcolor import colored
+import regex as re
 import os
 class PacketHandler:
     def __init__(self):
         self.source_ip = ""
+        self.source_ip_valid = False
         self.destination_ip = ""
+        self.destination_ip_valid = False
         self.source_port = 0
+        self.source_port_valid = False
         self.destination_port = 0
+        self.destination_port_valid = False
         self.protocol = ""
+        self.protocol_valid = False
         self.payload = ""
-    def send_packet(self):
-        if self.protocol == "TCP":
-            packet = IP(src=self.source_ip, dst=self.destination_ip)/TCP(sport=self.source_port, dport=self.destination_port)/self.payload
-        elif self.protocol == "UDP":
-            packet = IP(src=self.source_ip, dst=self.destination_ip)/UDP(sport=self.source_port, dport=self.destination_port)/self.payload
-        elif self.protocol == "ICMP":
-            packet = IP(src=self.source_ip, dst=self.destination_ip)/ICMP()/self.payload
-        send(packet)
+
+    def uncolor(self):
+        self.source_ip = re.sub(r'\x1b\[[0-9;]*m', '', self.source_ip)
+        self.destination_ip = re.sub(r'\x1b\[[0-9;]*m', '', self.destination_ip)
+        self.source_port = re.sub(r'\x1b\[[0-9;]*m', '', self.source_port)
+        self.destination_port = re.sub(r'\x1b\[[0-9;]*m', '', self.destination_port)
+        self.protocol = re.sub(r'\x1b\[[0-9;]*m', '', self.protocol)
+
+    def send_packet(self, number_of_packets: int):
+        self.uncolor()
+        if("TCP" in self.protocol):
+            packet = IP(src=self.source_ip, dst=self.destination_ip)/TCP(sport=int(self.source_port), dport=int(self.destination_port))/self.payload
+        elif("UDP" in self.protocol):
+            packet = IP(src=self.source_ip, dst=self.destination_ip)/UDP(sport=int(self.source_port), dport=int(self.destination_port))/self.payload
+        elif("ICMP" in self.protocol):
+            packet = IP(src=self.source_ip, dst=self.destination_ip)/ICMP(type=8)/self.payload
+        send(packet, count=number_of_packets)
+
     def generate_table(self):
+        if(self.source_ip_valid == False):
+            self.source_ip = colored(self.source_ip, 'red', attrs=['bold'])
+        else:
+            self.source_ip = colored(self.source_ip, 'green', attrs=['bold'])
+        if(self.destination_ip_valid == False):
+            self.destination_ip = colored(self.destination_ip, 'red', attrs=['bold'])
+        else:
+            self.destination_ip = colored(self.destination_ip, 'green', attrs=['bold'])
+        if(self.source_port_valid == False):
+            self.source_port = colored(self.source_port, 'red', attrs=['bold'])
+        else:
+            self.source_port = colored(self.source_port, 'green', attrs=['bold'])
+        if(self.destination_port_valid == False):
+            self.destination_port = colored(self.destination_port, 'red', attrs=['bold'])
+        else:
+            self.destination_port = colored(self.destination_port, 'green', attrs=['bold'])
+        if(self.protocol_valid == False):
+            self.protocol = colored(self.protocol, 'red', attrs=['bold'])
+        else:
+            self.protocol = colored(self.protocol, 'green', attrs=['bold'])
         table_data = [
             ["", "OPTION", "VALUE"], 
             ["1", "Source IP", self.source_ip],
@@ -34,52 +71,127 @@ class PacketHandler:
         match option:
             case 1:
                 self.source_ip = input("Enter the source IP: ")
-            case 2:
+                if(self.validate_input(None, 2, 1) == True):
+                    self.source_ip_valid = True
+                else:
+                    self.source_ip_valid = False
+            case 2: 
                 self.destination_ip = input("Enter the destination IP: ")
+                if(self.validate_input(None, 2, 2) == True):
+                    self.destination_ip_valid = True
+                else:
+                    self.destination_ip_valid = False
             case 3:
-                self.source_port = int(input("Enter the source port: "))
+                self.source_port = input("Enter the source port: ")
+                if(self.validate_input(None, 2, 3) == True):
+                    self.source_port_valid = True
+                else:
+                    self.source_port_valid = False
             case 4:
-                self.destination_port = int(input("Enter the destination port: "))
-            case 5:
+                self.destination_port = input("Enter the destination port: ")
+                if(self.validate_input(None, 2, 4) == True):
+                    self.destination_port_valid = True
+                else:
+                    self.destination_port_valid = False
+            case 5: 
                 self.protocol = input("Enter the protocol: ")
+                if(self.validate_input(None, 2, 5) == True):
+                    self.protocol_valid = True
+                else:
+                    self.protocol_valid = False
             case 6:
                 self.payload = input("Enter the payload: ")
-    def validate_input(self, option: int) -> bool:
-        try:
-            option = int(option)
-        except ValueError:
-            return False
-        match option:
+    def validate_input(self, user_input: int, validation_type: int, validation_option: int) -> bool:
+        match validation_type:
             case 1:
-                return True
+                try:
+                    user_input = int(user_input)
+                    if user_input in (1, 2, 3, 4, 5, 6):
+                        return True
+                    else:
+                        raise ValueError
+                except ValueError:
+                    return False
             case 2:
-                return True
-            case 3:
-                return True
-            case 4:
-                return True
-            case 5:
-                return True
-            case 6:
-                return True
-            case _:
-                return False
+                match validation_option:
+                    case 1:
+                        if (
+                            re.match(r"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$", self.source_ip)
+                            ) or (
+                            re.match(r"^www\.[a-zA-Z0-9]+\.com$", self.source_ip)
+                            ):
+                            return True
+                        else:
+                            return False
+                    case 2:
+                        if (
+                            re.match(r"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$", self.destination_ip)
+                        ) or (
+                            re.match(r"^www\.[a-zA-Z0-9]+\.[a-z]{2,}$", self.destination_ip)
+                        ):
+                            return True
+                        else:
+                            return False
+                    case 3:
+                        try:
+                            self.source_port = int(self.source_port)
+                            if self.source_port in range(0, 65536):
+                                return True
+                            else:
+                                raise ValueError
+                        except ValueError:
+                            return False
+                    case 4:
+                        try:
+                            self.destination_port = int(self.destination_port)
+                            if self.destination_port in range(0, 65536):
+                                return True
+                            else:
+                                raise ValueError
+                        except ValueError:
+                            return False
+                    case 5:
+                        if self.protocol in ("TCP", "UDP", "ICMP"):
+                            return True
+                        else:
+                            return False
     def run(self):
         while True:
             os.system('cls')
             self.generate_table()
-            print("Enter the option you want to change. Enter '!'' to send the packet.")
+            print("Enter the option you want to change. Enter '!' to send the packet. '?' to exit.")
             option = input(">> ")
-            if option == "!":
-                self.send_packet()
-                break
+            if option == "?":
+                return
+            elif option == "!":
+                if(
+                    self.source_ip_valid == True and
+                    self.destination_ip_valid == True and
+                    self.source_port_valid == True and
+                    self.destination_port_valid == True and
+                    self.protocol_valid == True
+                ):
+                    print("How many packets do you want to send?")
+                    packet_count = input(">> ")
+                    try:
+                        packet_count = int(packet_count)
+                        if packet_count > 0:
+                            self.send_packet(packet_count)
+                            return
+                        else:
+                            raise ValueError
+                    except ValueError:
+                        print("Invalid packet count. Try again.")
+                        input("Press enter to continue...")
+                else:
+                    print("One or more fields are invalid.")
+                    input("Press enter to continue...")
             else:
-                if self.validate_input(option):
+                if self.validate_input(option, 1, None):
                     self.send_input(int(option))
                 else:
                     print("Invalid option. Try again.")
                     input("Press enter to continue...")
-
 if __name__ == "__main__":
     packet = PacketHandler()
     packet.run()
