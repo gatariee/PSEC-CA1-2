@@ -192,9 +192,5 @@ class PacketHandler:
                 else:
                     print("Invalid option. Try again.")
                     input("Press enter to continue...")
-if __name__ == "__main__":
-    packet = PacketHandler()
-    packet.run()
-
 
 
