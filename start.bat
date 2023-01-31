@@ -9,6 +9,6 @@ echo Starting Virtual Environment...
     echo Installing Python Dependencies...
     pip install -r requirements.txt
 )
-start "Server" cmd /k "python server.py" /min
-timeout 3
-python main.py
+start /min "Server" cmd /k "python server.py"
+timeout 2
+python main.py & exit
