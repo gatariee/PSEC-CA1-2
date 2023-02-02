@@ -55,6 +55,7 @@ while 1:
             PORT = 2121
             ftp_client = FTPHandler(IP, PORT)
             ftp_client.run()
+            buffer()
         case '3':
             clear_screen()
             packet_handler = PacketHandler()

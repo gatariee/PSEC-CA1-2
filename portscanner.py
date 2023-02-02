@@ -77,20 +77,17 @@ class Scanner:
         for host in scan_results:
             for protocol in host['protocol']:
                 for port in host[protocol].keys():
-                    table_data.append
-                    (
-                        [
+                    table_data.append([
                         host['host'],
                         host['hostname'],
                         protocol,
                         host[protocol][port]['port'],
                         host[protocol][port]['state'],
                         host[protocol][port]['product'],
-                        host[protocol][port]['extrainfo'][:12 if len(host[protocol][port]['extrainfo']) > 20 else len(host[protocol][port]['extrainfo'])],
+                        host[protocol][port]['extrainfo'],
                         host[protocol][port]['reason'],
-                        host[protocol][port]['cpe'][7:]
-                    ]
-                )
+                        host[protocol][port]['cpe']
+                    ])
         TABLE: SingleTable = SingleTable(table_data)
         TABLE.inner_row_border = 1
         for row in TABLE.table_data:
@@ -137,11 +134,6 @@ class Scanner:
         live_hosts = self.is_alive()
         if(live_hosts is True):
             scan_results = self.perform_scan()
-            # with open('results.txt', 'w') as f:
-            #     f.write(str(scan_results))
-            # generate sample test results
-            # with open('results.txt', 'r') as f:
-            #     scan_results = f.read()
             self.generate_table(scan_results)
         else:
             print("Host is either dead or blocking ICMP packets.")

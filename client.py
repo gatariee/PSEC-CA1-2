@@ -31,7 +31,11 @@ class FTPHandler:
                 if(filename not in self.ftp.nlst()):
                     print("File not found. ")
                     continue
-                self.ftp.retrbinary(f"RETR {filename}", open(f"{self.directory}/{filename}", 'wb').write)
+                try: 
+                    self.ftp.retrbinary(f"RETR {filename}", open(f"{self.directory}/{filename}", 'wb').write)
+                except Exception:
+                    print(f"Error in downloading file {filename}.")
+                    continue
                 print(f"File {filename} downloaded to {self.directory}/{filename}.")
             elif command[:3] == 'put':
                 if(len(command) == 3):
@@ -41,7 +45,11 @@ class FTPHandler:
                 if(filename not in os.listdir(self.directory)):
                     print("File not found.")
                     continue
-                self.ftp.storbinary(f"STOR {filename}", open(f"{self.directory}/{filename}", 'rb'))
+                try:
+                    self.ftp.storbinary(f"STOR {filename}", open(f"{self.directory}/{filename}", 'rb'))
+                except Exception:
+                    print(f"Error in uploading file {filename}.")
+                    continue
                 print(f"File {filename} uploaded to server.")
             elif command == 'clear':
                 os.system('cls')

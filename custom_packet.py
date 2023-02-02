@@ -16,7 +16,6 @@ class PacketHandler:
         self.protocol = ""
         self.protocol_valid = False
         self.payload = ""
-
     def uncolor(self):
         self.source_ip = re.sub(r'\x1b\[[0-9;]*m', '', self.source_ip)
         self.destination_ip = re.sub(r'\x1b\[[0-9;]*m', '', self.destination_ip)
@@ -57,8 +56,8 @@ class PacketHandler:
             self.protocol = colored(self.protocol, 'green', attrs=['bold'])
         table_data = [
             ["", "OPTION", "VALUE"], 
-            ["1", "Source IP", self.source_ip],
-            ["2", "Destination IP", self.destination_ip],
+            ["1", "Source", self.source_ip],
+            ["2", "Destination", self.destination_ip],
             ["3", "Source Port", self.source_port],
             ["4", "Destination Port", self.destination_port],
             ["5", "Protocol", self.protocol],
@@ -70,31 +69,31 @@ class PacketHandler:
     def send_input(self, option: int):
         match option:
             case 1:
-                self.source_ip = input("Enter the source IP (x.x.x.x):")
+                self.source_ip = input("Enter the source address (http/s://) | www.example.com | x.x.x.x: ").replace(" ", "")
                 if(self.validate_input(None, 2, 1) == True):
                     self.source_ip_valid = True
                 else:
                     self.source_ip_valid = False
             case 2: 
-                self.destination_ip = input("Enter the destination IP (x.x.x.x):")
+                self.destination_ip = input("Enter the destination address (http/s://) | www.example.com | x.x.x.x: ").replace(" ", "")
                 if(self.validate_input(None, 2, 2) == True):
                     self.destination_ip_valid = True
                 else:
                     self.destination_ip_valid = False
             case 3:
-                self.source_port = input("Enter the source port (0-65535): ")
+                self.source_port = input("Enter the source port (0-65535): ").replace(" ", "")
                 if(self.validate_input(None, 2, 3) == True):
                     self.source_port_valid = True
                 else:
                     self.source_port_valid = False
             case 4:
-                self.destination_port = input("Enter the destination port (0-65535): ")
+                self.destination_port = input("Enter the destination port (0-65535): ").replace(" ", "")
                 if(self.validate_input(None, 2, 4) == True):
                     self.destination_port_valid = True
                 else:
                     self.destination_port_valid = False
             case 5: 
-                self.protocol = input("Enter the protocol(TCP, IP, ICMP): ")
+                self.protocol = input("Enter the protocol(TCP, IP, ICMP): ").replace(" ", "")
                 if(self.validate_input(None, 2, 5) == True):
                     self.protocol_valid = True
                 else:
@@ -119,6 +118,10 @@ class PacketHandler:
                             re.match(r"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$", self.source_ip)
                             ) or (
                             re.match(r"^www\.[a-zA-Z0-9]+\.com$", self.source_ip)
+                            ) or (
+                            re.match(r"^https?://www\.[a-zA-Z0-9]+\.com$", self.source_ip)
+                            ) or (
+                            re.match(r"^https?://[a-zA-Z0-9]+\.[a-z]{2,}$", self.source_ip)
                             ):
                             return True
                         else:
@@ -126,8 +129,18 @@ class PacketHandler:
                     case 2:
                         if (
                             re.match(r"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$", self.destination_ip)
+                            # xxx.xxx.xxx.xxx
                         ) or (
                             re.match(r"^www\.[a-zA-Z0-9]+\.[a-z]{2,}$", self.destination_ip)
+                            # www.example.com
+                        ) or (
+                            re.match(r"^https?://www\.[a-zA-Z0-9]+\.[a-z]{2,}$", self.destination_ip)
+                            # https://www.example.com
+                            # http://www.example.com
+                        ) or (
+                            re.match(r"^https?://[a-zA-Z0-9]+\.[a-z]{2,}$", self.destination_ip)
+                            # https://example.com
+                            # http://example.com
                         ):
                             return True
                         else:
