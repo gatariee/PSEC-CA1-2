@@ -1,10 +1,15 @@
 from scapy.all import send, IP, TCP, ICMP, UDP
 from terminaltables import SingleTable
 from termcolor import colored
-import regex as re
 import os
+import regex as re
+def clear_screen(): 
+    os.system('cls' if os.name == 'nt' else 'clear')
 class PacketHandler:
     def __init__(self):
+        """
+        This class is used to handle the custom packet generator.
+        """
         self.source_ip = ""
         self.source_ip_valid = False
         self.destination_ip = ""
@@ -16,7 +21,11 @@ class PacketHandler:
         self.protocol = ""
         self.protocol_valid = False
         self.payload = ""
+
     def uncolor(self):
+        """
+        This function is used to remove the color from the terminal. Before sending the packet, the color is removed.
+        """
         self.source_ip = re.sub(r'\x1b\[[0-9;]*m', '', self.source_ip)
         self.destination_ip = re.sub(r'\x1b\[[0-9;]*m', '', self.destination_ip)
         self.source_port = re.sub(r'\x1b\[[0-9;]*m', '', self.source_port)
@@ -24,6 +33,12 @@ class PacketHandler:
         self.protocol = re.sub(r'\x1b\[[0-9;]*m', '', self.protocol)
 
     def send_packet(self, number_of_packets: int):
+        """
+        This function is used to send the packet.
+
+        Args:
+            number_of_packets (int): The number of packets to send.
+        """
         self.uncolor()
         if("TCP" in self.protocol):
             packet = IP(src=self.source_ip, dst=self.destination_ip)/TCP(sport=int(self.source_port), dport=int(self.destination_port))/self.payload
@@ -34,6 +49,9 @@ class PacketHandler:
         send(packet, count=number_of_packets)
 
     def generate_table(self):
+        """
+        This function is used to generate the table.
+        """
         if(self.source_ip_valid == False):
             self.source_ip = colored(self.source_ip, 'red', attrs=['bold'])
         else:
@@ -67,6 +85,12 @@ class PacketHandler:
         TABLE.inner_row_border = 1
         print(TABLE.table)
     def send_input(self, option: int):
+        """
+        This function is called when the user tries to change a value from the table
+
+        Args:
+            option (int): Which option the user wants to change.
+        """
         match option:
             case 1:
                 self.source_ip = input("Enter the source address (http/s://) | www.example.com | x.x.x.x: ").replace(" ", "")
@@ -101,6 +125,21 @@ class PacketHandler:
             case 6:
                 self.payload = input("Enter the payload: ")
     def validate_input(self, user_input: int, validation_type: int, validation_option: int) -> bool:
+        """
+        Validates an input from the user and returns a boolean value.
+        This boolean value controls the color of the input in the table.
+
+        Args:
+            user_input (int): Input from the user.
+            validation_type (int): Input by the script to determine the type of validation. (1 = Menu, 2 = Input)
+            validation_option (int): Input by the script to determine the option of validation. (1 = Source IP, 2 = Destination IP, 3 = Source Port, 4 = Destination Port, 5 = Protocol)
+
+        Raises:
+            ValueError: If the user input is out of the specified range.
+
+        Returns:
+            bool: True if the input is valid, False if the input is invalid.
+        """
         match validation_type:
             case 1:
                 try:
@@ -169,8 +208,14 @@ class PacketHandler:
                         else:
                             return False
     def run(self):
+        """
+        Runs the script to start generating a custom packet
+
+        Raises:
+            ValueError: When the user selects an invalid number of packets to be sent.
+        """
         while True:
-            os.system('cls')
+            clear_screen()
             self.generate_table()
             print("Enter the option you want to change. Enter '!' to send the packet. '?' to exit.")
             option = input(">> ")

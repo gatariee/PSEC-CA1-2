@@ -1,5 +1,9 @@
 from ftplib import FTP 
 import os
+def clear_screen(): 
+    os.system('cls' if os.name == 'nt' else 'clear')
+def buffer():
+    input("Press enter to continue...")
 class FTPHandler:
     def __init__(self, ip: str, port: int):
         self.ip = ip
@@ -57,6 +61,7 @@ class FTPHandler:
             else:
                 print("Command not recognized. Type '?' for a full list of commands. '!' to quit.")
     def run(self):
+        clear_screen()
         print(f"Attempting connection to {self.ip}:{self.port}...")
         try:
             self.connect()
@@ -65,3 +70,4 @@ class FTPHandler:
             self.listener()
         except Exception:
             print(f"Connection to {self.ip}:{self.port} failed. \n")
+        buffer()
