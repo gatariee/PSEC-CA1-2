@@ -27,4 +27,3 @@ else
     echo "Installing Python Dependencies..."
     pip install -r requirements.txt
 fi
-exec bash

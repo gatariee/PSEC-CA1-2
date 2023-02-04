@@ -1,10 +1,25 @@
-import os
-import socket
-from termcolor import colored
-from terminaltables import SingleTable
-from portscanner import Scanner
-from client import FTPHandler
-from custom_packet import PacketHandler
+try:
+    import os
+    import socket
+    from termcolor import colored
+    from terminaltables import SingleTable
+    from portscanner import Scanner
+    from client import FTPHandler
+    from custom_packet import PacketHandler
+except Exception as e:
+    print(f"Error: {e}")
+    if e == ModuleNotFoundError:
+        print("Please run 'pip install -r requirements.txt' to install the required modules.")
+        print("If you are using a virtual environment, make sure it is activated.")
+    elif "nmap" in str(e):
+        print("If python-nmap is installed, it may be colliding with another library that also uses the same nmap name")
+        print("\nThis is a well-known issue that we can not fix. \nhttps://stackoverflow.com/questions/71652574/getting-error-attributeerror-module-nmap-has-no-attribute-portscanner \n")
+        print("Please try the following: \n1. Start a new virtual environment \n2. Run 'pip install -r requirements.txt' \n3. Run the program again")
+
+    else:
+        print("Unknown error. Please check your installation.")
+    exit()
+
 def clear_screen(): 
     os.system('cls' if os.name == 'nt' else 'clear')
 def buffer():

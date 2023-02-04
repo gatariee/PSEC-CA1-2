@@ -235,6 +235,7 @@ class PacketHandler:
                         packet_count = int(packet_count)
                         if packet_count > 0:
                             self.send_packet(packet_count)
+                            input("Press enter to continue...")
                             return
                         else:
                             raise ValueError
@@ -260,5 +261,6 @@ class PacketHandler:
                 else:
                     print("Invalid option. Try again.")
                     input("Press enter to continue...")
+            
 
 
