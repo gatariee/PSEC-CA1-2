@@ -62,7 +62,7 @@ def main():
         req = 1
 
     if python_ver and dir_check and virtual_env and req:
-        print("All checks passed. Installation is OK.")
+        print("All checks passed. Installation is OK.\nFollow the instructions on the README.md file to run the program.")
     else:
         print("One ore more checks failed. Installation is not OK.")
 if __name__ == '__main__':

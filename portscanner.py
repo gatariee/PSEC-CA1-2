@@ -145,7 +145,7 @@ class Scanner:
         else:
             self.scan_targets = alive
             return True
-    def main_menu(self) -> None:
+    def main_menu(self) -> bool or None:
         while 1:
             clear_screen()
             self.initialize_values()
@@ -179,7 +179,7 @@ class Scanner:
             else:
                 print("Invalid choice. Please try again.")
                 buffer()
-    def safety_net(self) -> None:
+    def safety_net(self) -> bool:
         for host in self.targets.split(' '):
             if(re.match(r"^[a-zA-Z0-9\.\-]+$", host) is None):
                 return False
@@ -192,7 +192,6 @@ class Scanner:
             if(len(scan_files) == 0):
                 print("No scan results found.")
                 buffer()
-                return
             else:
                 print(f"Scan results found: {len(scan_files)}")
                 table_data = [
@@ -218,12 +217,7 @@ class Scanner:
 
 
     def change_targets(self) -> None:
-        initial_input = input("Enter the targets: ")
-        if(re.match(r"^[a-zA-Z0-9.-]+( [a-zA-Z0-9.-]+)*$", initial_input)):
-            self.targets = initial_input
-        else:
-            print("Please follow the stipulated format: xxx xxx")
-            buffer()
+        self.targets = input("Enter the targets: ")
             
 
     def change_options(self) -> None:
