@@ -42,7 +42,8 @@ def main():
         "regex==2022.10.31",
         "scapy==2.5.0",
         "termcolor==2.2.0",
-        "terminaltables==3.1.10"
+        "terminaltables==3.1.10",
+        "pyftpdlib==1.5.7",
         ]
     missing_modules = []
     for module in required_modules:

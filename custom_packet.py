@@ -124,7 +124,7 @@ class PacketHandler:
                     self.protocol_valid = False
             case 6:
                 self.payload = input("Enter the payload: ")
-    def validate_input(self, user_input: int, validation_type: int, validation_option: int) -> bool:
+    def validate_input(self, user_input: (int or None), validation_type: int, validation_option: (int or None) )-> bool:
         """
         Validates an input from the user and returns a boolean value.
         This boolean value controls the color of the input in the table.

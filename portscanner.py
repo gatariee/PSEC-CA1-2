@@ -181,7 +181,13 @@ class Scanner:
                 buffer()
     def safety_net(self) -> bool:
         for host in self.targets.split(' '):
-            if(re.match(r"^[a-zA-Z0-9\.\-]+$", host) is None):
+            if(
+                re.match(r"^[a-zA-Z0-9\.\-]+$", host) is None
+                ) or (
+                re.match(r"^https?://www\.[a-zA-Z0-9]+\.[a-z]{2,}$", host) is not None
+                ) or (
+                re.match(r"^https?://[a-zA-Z0-9]+\.[a-z]{2,}$", host) is not None 
+                ):
                 return False
         return True
     def view_past_scans(self) -> None:
